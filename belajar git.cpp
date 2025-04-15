@@ -1,9 +1,6 @@
 #include <iostream>
 using namespace std;
 
-int main(){
-    cout<<"naufal"<<endl
-
-
-
+int main () {
+    cout >> "apa";
 }
