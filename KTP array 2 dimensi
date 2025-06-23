@@ -1,0 +1,101 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+const int MAKS = 100;
+
+struct KTP {
+    string nik, nama, alamat, ttl, jenis_kelamin;
+};
+
+string riwayat_domisili[MAKS][3];
+
+int main() {
+    KTP data[MAKS];
+    int jumlah = 0;
+    int pilih;
+    string cari;
+
+    while (true) {
+        cout << "\n1. Tambah\n2. Lihat\n3. Cari NIK\n4. Urutkan Nama\n5. Keluar\nPilih: ";
+        cin >> pilih;
+        cin.ignore();
+
+        if (pilih == 1) {
+            if (jumlah < MAKS) {
+                cout << "NIK: "; getline(cin, data[jumlah].nik);
+                cout << "Nama: "; getline(cin, data[jumlah].nama);
+                cout << "Alamat Utama: "; getline(cin, data[jumlah].alamat);
+                cout << "TTL: "; getline(cin, data[jumlah].ttl);
+                cout << "Jenis Kelamin: "; getline(cin, data[jumlah].jenis_kelamin);
+                for (int i = 0; i < 3; i++) {
+                    cout << "Alamat domisili ke-" << i + 1 << ": ";
+                    getline(cin, riwayat_domisili[jumlah][i]);
+                }
+                jumlah++;
+            } else {
+                cout << "Data penuh!\n";
+            }
+        }
+        else if (pilih == 2) {
+            for (int i = 0; i < jumlah; i++) {
+                cout << "\nData ke-" << i+1 << endl;
+                cout << "NIK: " << data[i].nik << endl;
+                cout << "Nama: " << data[i].nama << endl;
+                cout << "Alamat Utama: " << data[i].alamat << endl;
+                cout << "TTL: " << data[i].ttl << endl;
+                cout << "Jenis Kelamin: " << data[i].jenis_kelamin << endl;
+                cout << "Riwayat Domisili Tambahan:\n";
+                for (int j = 0; j < 3; j++) {
+                    if (!riwayat_domisili[i][j].empty()) {
+                        cout << "- " << riwayat_domisili[i][j] << endl;
+                    }
+                }
+            }
+        }
+        else if (pilih == 3) {
+            cout << "Masukkan NIK: ";
+            getline(cin, cari);
+            bool ketemu = false;
+            for (int i = 0; i < jumlah; i++) {
+                if (data[i].nik == cari) {
+                    cout << "\nDitemukan:\n";
+                    cout << "Nama: " << data[i].nama << endl;
+                    cout << "Alamat Utama: " << data[i].alamat << endl;
+                    cout << "TTL: " << data[i].ttl << endl;
+                    cout << "Jenis Kelamin: " << data[i].jenis_kelamin << endl;
+                    cout << "Riwayat Domisili Tambahan:\n";
+                    for (int j = 0; j < 3; j++) {
+                        if (!riwayat_domisili[i][j].empty()) {
+                            cout << "- " << riwayat_domisili[i][j] << endl;
+                        }
+                    }
+                    ketemu = true;
+                    break;
+                }
+            }
+            if (!ketemu) cout << ">> Tidak ditemukan.\n";
+        }
+        else if (pilih == 4) {
+            for (int i = 0; i < jumlah - 1; i++) {
+                for (int j = 0; j < jumlah - i - 1; j++) {
+                    if (data[j].nama > data[j + 1].nama) {
+                        KTP temp = data[j];
+                        data[j] = data[j + 1];
+                        data[j + 1] = temp;
+                        for (int k = 0; k < 3; k++) {
+                            string tempDom = riwayat_domisili[j][k];
+                            riwayat_domisili[j][k] = riwayat_domisili[j + 1][k];
+                            riwayat_domisili[j + 1][k] = tempDom;
+                        }
+                    }
+                }
+            }
+            cout << ">> Data berhasil diurutkan berdasarkan nama.\n";
+        }
+        else if (pilih == 5) break;
+        else cout << ">> Pilihan salah.\n";
+    }
+
+    return 0;
+}
