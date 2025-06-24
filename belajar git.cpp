@@ -8,4 +8,4 @@ Arkan adalah seorang mahasiswa informatika yang sedang mengembangkan sebuah sist
 		1. Kesulitan mencari data mahasiswa berdasarkan NIM secara cepat dan akurat.
 		2. Urutkan berdasarkan ascending dan descending
 	
-menggunakan coding c++, menggunakan class
+menggunakan coding c++, menggunakan class dan menginput sendiri secara dinamis
