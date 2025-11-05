@@ -1,0 +1,202 @@
+import java.util.Scanner;
+
+// Superclass Manager
+class Manager {
+    String nama;
+    String departemen;
+    double gajiPokok;
+    
+    Manager(String nama, String departemen, double gajiPokok) {
+        this.nama = nama;
+        this.departemen = departemen;
+        this.gajiPokok = gajiPokok;
+    }
+    
+    double hitungGaji() {
+        return gajiPokok;
+    }
+    
+    void tampilkan() {
+        System.out.println("\n--- DATA KARYAWAN ---");
+        System.out.println("Nama       : " + nama);
+        System.out.println("Departemen : " + departemen);
+        System.out.println("Gaji Pokok : Rp " + gajiPokok);
+        System.out.println("Total Gaji : Rp " + hitungGaji());
+    }
+}
+
+// Subclass ManagerLevel
+class ManagerLevel extends Manager {
+    double bonus;
+    double tunjangan;
+    
+    ManagerLevel(String nama, String departemen, double gajiPokok, double bonus, double tunjangan) {
+        super(nama, departemen, gajiPokok);
+        this.bonus = bonus;
+        this.tunjangan = tunjangan;
+    }
+    
+    @Override
+    double hitungGaji() {
+        return gajiPokok + bonus + tunjangan;
+    }
+    
+    @Override
+    void tampilkan() {
+        System.out.println("\n--- MANAGER ---");
+        System.out.println("Nama       : " + nama);
+        System.out.println("Departemen : " + departemen);
+        System.out.println("Gaji Pokok : Rp " + gajiPokok);
+        System.out.println("Bonus      : Rp " + bonus);
+        System.out.println("Tunjangan  : Rp " + tunjangan);
+        System.out.println("Total Gaji : Rp " + hitungGaji());
+    }
+}
+
+// Subclass Karyawan
+class Karyawan extends Manager {
+    double lembur;
+    
+    Karyawan(String nama, String departemen, double gajiPokok, double lembur) {
+        super(nama, departemen, gajiPokok);
+        this.lembur = lembur;
+    }
+    
+    @Override
+    double hitungGaji() {
+        return gajiPokok + lembur;
+    }
+    
+    @Override
+    void tampilkan() {
+        System.out.println("\n--- KARYAWAN ---");
+        System.out.println("Nama       : " + nama);
+        System.out.println("Departemen : " + departemen);
+        System.out.println("Gaji Pokok : Rp " + gajiPokok);
+        System.out.println("Lembur     : Rp " + lembur);
+        System.out.println("Total Gaji : Rp " + hitungGaji());
+    }
+}
+
+// Main Program
+public class Main {
+    static Manager[] daftarPegawai = new Manager[10];
+    static int jumlah = 0;
+    static Scanner input = new Scanner(System.in);
+    
+    public static void main(String[] args) {
+        int pilihan;
+        
+        do {
+            tampilkanMenu();
+            System.out.print("Pilih menu: ");
+            pilihan = input.nextInt();
+            input.nextLine();
+            
+            switch (pilihan) {
+                case 1:
+                    tambahManager();
+                    break;
+                case 2:
+                    tambahKaryawan();
+                    break;
+                case 3:
+                    tampilkanSemua();
+                    break;
+                case 0:
+                    System.out.println("\n=================================");
+                    System.out.println("  Terima kasih!");
+                    System.out.println("=================================");
+                    break;
+                default:
+                    System.out.println("\nPilihan tidak valid!");
+            }
+            
+        } while (pilihan != 0);
+        
+        input.close();
+    }
+    
+    static void tampilkanMenu() {
+        System.out.println("\n=================================");
+        System.out.println("  SISTEM PENGGAJIAN KARYAWAN");
+        System.out.println("=================================");
+        System.out.println("1. Tambah Manager");
+        System.out.println("2. Tambah Karyawan");
+        System.out.println("3. Tampilkan Semua Data");
+        System.out.println("0. Keluar");
+        System.out.println("=================================");
+    }
+    
+    static void tambahManager() {
+        if (jumlah >= 10) {
+            System.out.println("\nData sudah penuh!");
+            return;
+        }
+        
+        System.out.println("\n--- INPUT DATA MANAGER ---");
+        System.out.print("Nama       : ");
+        String nama = input.nextLine();
+        System.out.print("Departemen : ");
+        String dept = input.nextLine();
+        System.out.print("Gaji Pokok : ");
+        double gaji = input.nextDouble();
+        System.out.print("Bonus      : ");
+        double bonus = input.nextDouble();
+        System.out.print("Tunjangan  : ");
+        double tunjangan = input.nextDouble();
+        
+        daftarPegawai[jumlah] = new ManagerLevel(nama, dept, gaji, bonus, tunjangan);
+        jumlah++;
+        
+        System.out.println("\n✓ Data Manager berhasil ditambahkan!");
+    }
+    
+    static void tambahKaryawan() {
+        if (jumlah >= 10) {
+            System.out.println("\nData sudah penuh!");
+            return;
+        }
+        
+        System.out.println("\n--- INPUT DATA KARYAWAN ---");
+        System.out.print("Nama       : ");
+        String nama = input.nextLine();
+        System.out.print("Departemen : ");
+        String dept = input.nextLine();
+        System.out.print("Gaji Pokok : ");
+        double gaji = input.nextDouble();
+        System.out.print("Lembur     : ");
+        double lembur = input.nextDouble();
+        
+        daftarPegawai[jumlah] = new Karyawan(nama, dept, gaji, lembur);
+        jumlah++;
+        
+        System.out.println("\n✓ Data Karyawan berhasil ditambahkan!");
+    }
+    
+    static void tampilkanSemua() {
+        if (jumlah == 0) {
+            System.out.println("\nBelum ada data karyawan!");
+            return;
+        }
+        
+        System.out.println("\n=================================");
+        System.out.println("  DAFTAR SEMUA KARYAWAN");
+        System.out.println("=================================");
+        
+        double totalSemua = 0;
+        
+        // Polymorphism: panggil method yang sama untuk semua objek
+        for (int i = 0; i < jumlah; i++) {
+            daftarPegawai[i].tampilkan();
+            totalSemua += daftarPegawai[i].hitungGaji();
+        }
+        
+        System.out.println("\n=================================");
+        System.out.println("  RINGKASAN PENGGAJIAN");
+        System.out.println("=================================");
+        System.out.println("Jumlah Karyawan  : " + jumlah);
+        System.out.println("Total Pengeluaran: Rp " + totalSemua);
+        System.out.println("=================================");
+    }
+}
