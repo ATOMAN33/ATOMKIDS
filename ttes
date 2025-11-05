@@ -1,0 +1,322 @@
+import java.util.Scanner;
+
+// Class dasar Manager sebagai superclass
+class Manager {
+    protected String nama;
+    protected String departemen;
+    protected double gajiPokok;
+    
+    public Manager(String nama, String departemen, double gajiPokok) {
+        this.nama = nama;
+        this.departemen = departemen;
+        this.gajiPokok = gajiPokok;
+    }
+    
+    // Method yang bisa di-override
+    public double hitungTotalPendapatan() {
+        return gajiPokok;
+    }
+    
+    // Method untuk menampilkan info
+    public void tampilkanInfo() {
+        System.out.println("=================================");
+        System.out.println("Nama: " + nama);
+        System.out.println("Departemen: " + departemen);
+        System.out.println("Gaji Pokok: Rp " + String.format("%,.0f", gajiPokok));
+        System.out.println("Total Pendapatan: Rp " + String.format("%,.0f", hitungTotalPendapatan()));
+        System.out.println("=================================\n");
+    }
+    
+    public String getNama() {
+        return nama;
+    }
+}
+
+// Class ManagerLevel (Manager dengan bonus dan tunjangan)
+class ManagerLevel extends Manager {
+    private double bonus;
+    private double tunjangan;
+    
+    public ManagerLevel(String nama, String departemen, double gajiPokok, double bonus, double tunjangan) {
+        super(nama, departemen, gajiPokok);
+        this.bonus = bonus;
+        this.tunjangan = tunjangan;
+    }
+    
+    @Override
+    public double hitungTotalPendapatan() {
+        return gajiPokok + bonus + tunjangan;
+    }
+    
+    @Override
+    public void tampilkanInfo() {
+        System.out.println("=================================");
+        System.out.println("Posisi: MANAGER");
+        System.out.println("Nama: " + nama);
+        System.out.println("Departemen: " + departemen);
+        System.out.println("Gaji Pokok: Rp " + String.format("%,.0f", gajiPokok));
+        System.out.println("Bonus: Rp " + String.format("%,.0f", bonus));
+        System.out.println("Tunjangan: Rp " + String.format("%,.0f", tunjangan));
+        System.out.println("Total Pendapatan: Rp " + String.format("%,.0f", hitungTotalPendapatan()));
+        System.out.println("=================================\n");
+    }
+}
+
+// Class Karyawan Tetap
+class KaryawanTetap extends Manager {
+    private double bonus;
+    private double lembur;
+    
+    public KaryawanTetap(String nama, String departemen, double gajiPokok, double bonus, double lembur) {
+        super(nama, departemen, gajiPokok);
+        this.bonus = bonus;
+        this.lembur = lembur;
+    }
+    
+    @Override
+    public double hitungTotalPendapatan() {
+        return gajiPokok + bonus + lembur;
+    }
+    
+    @Override
+    public void tampilkanInfo() {
+        System.out.println("=================================");
+        System.out.println("Posisi: KARYAWAN TETAP");
+        System.out.println("Nama: " + nama);
+        System.out.println("Departemen: " + departemen);
+        System.out.println("Gaji Pokok: Rp " + String.format("%,.0f", gajiPokok));
+        System.out.println("Bonus: Rp " + String.format("%,.0f", bonus));
+        System.out.println("Lembur: Rp " + String.format("%,.0f", lembur));
+        System.out.println("Total Pendapatan: Rp " + String.format("%,.0f", hitungTotalPendapatan()));
+        System.out.println("=================================\n");
+    }
+}
+
+// Class Karyawan Kontrak
+class KaryawanKontrak extends Manager {
+    private double lembur;
+    
+    public KaryawanKontrak(String nama, String departemen, double gajiPokok, double lembur) {
+        super(nama, departemen, gajiPokok);
+        this.lembur = lembur;
+    }
+    
+    @Override
+    public double hitungTotalPendapatan() {
+        return gajiPokok + lembur;
+    }
+    
+    @Override
+    public void tampilkanInfo() {
+        System.out.println("=================================");
+        System.out.println("Posisi: KARYAWAN KONTRAK");
+        System.out.println("Nama: " + nama);
+        System.out.println("Departemen: " + departemen);
+        System.out.println("Gaji Pokok: Rp " + String.format("%,.0f", gajiPokok));
+        System.out.println("Lembur: Rp " + String.format("%,.0f", lembur));
+        System.out.println("Total Pendapatan: Rp " + String.format("%,.0f", hitungTotalPendapatan()));
+        System.out.println("=================================\n");
+    }
+}
+
+// Main Class
+public class Main {
+    static Manager[] karyawanArray = new Manager[100]; // Array dengan kapasitas 100
+    static int jumlahKaryawan = 0;
+    static Scanner scanner = new Scanner(System.in);
+    
+    public static void main(String[] args) {
+        int pilihan;
+        
+        do {
+            tampilkanMenu();
+            System.out.print("Pilih menu: ");
+            pilihan = scanner.nextInt();
+            scanner.nextLine(); // consume newline
+            
+            switch(pilihan) {
+                case 1:
+                    tambahKaryawan();
+                    break;
+                case 2:
+                    tampilkanSemuaKaryawan();
+                    break;
+                case 3:
+                    cariKaryawan();
+                    break;
+                case 4:
+                    hapusKaryawan();
+                    break;
+                case 5:
+                    tampilkanTotalGaji();
+                    break;
+                case 0:
+                    System.out.println("\n╔═══════════════════════════════════════╗");
+                    System.out.println("║  Terima kasih! Program selesai.       ║");
+                    System.out.println("╚═══════════════════════════════════════╝");
+                    break;
+                default:
+                    System.out.println("\n❌ Pilihan tidak valid!");
+            }
+            
+            if(pilihan != 0) {
+                System.out.println("\nTekan Enter untuk melanjutkan...");
+                scanner.nextLine();
+            }
+            
+        } while(pilihan != 0);
+        
+        scanner.close();
+    }
+    
+    static void tampilkanMenu() {
+        System.out.println("\n╔═══════════════════════════════════════╗");
+        System.out.println("║   SISTEM PENGGAJIAN KARYAWAN PT XYZ   ║");
+        System.out.println("╚═══════════════════════════════════════╝");
+        System.out.println("1. Tambah Karyawan");
+        System.out.println("2. Tampilkan Semua Karyawan");
+        System.out.println("3. Cari Karyawan");
+        System.out.println("4. Hapus Karyawan");
+        System.out.println("5. Tampilkan Total Gaji");
+        System.out.println("0. Keluar");
+        System.out.println("=================================");
+    }
+    
+    static void tambahKaryawan() {
+        if(jumlahKaryawan >= 100) {
+            System.out.println("\n❌ Kapasitas penuh! Tidak bisa menambah karyawan lagi.");
+            return;
+        }
+        
+        System.out.println("\n--- TAMBAH KARYAWAN BARU ---");
+        System.out.println("Pilih jenis karyawan:");
+        System.out.println("1. Manager");
+        System.out.println("2. Karyawan Tetap");
+        System.out.println("3. Karyawan Kontrak");
+        System.out.print("Pilihan: ");
+        int jenis = scanner.nextInt();
+        scanner.nextLine();
+        
+        System.out.print("Nama: ");
+        String nama = scanner.nextLine();
+        
+        System.out.print("Departemen: ");
+        String departemen = scanner.nextLine();
+        
+        System.out.print("Gaji Pokok: Rp ");
+        double gajiPokok = scanner.nextDouble();
+        
+        switch(jenis) {
+            case 1:
+                System.out.print("Bonus: Rp ");
+                double bonusMgr = scanner.nextDouble();
+                System.out.print("Tunjangan: Rp ");
+                double tunjangan = scanner.nextDouble();
+                karyawanArray[jumlahKaryawan] = new ManagerLevel(nama, departemen, gajiPokok, bonusMgr, tunjangan);
+                jumlahKaryawan++;
+                System.out.println("\n✅ Manager berhasil ditambahkan!");
+                break;
+            case 2:
+                System.out.print("Bonus: Rp ");
+                double bonusKar = scanner.nextDouble();
+                System.out.print("Lembur: Rp ");
+                double lemburKar = scanner.nextDouble();
+                karyawanArray[jumlahKaryawan] = new KaryawanTetap(nama, departemen, gajiPokok, bonusKar, lemburKar);
+                jumlahKaryawan++;
+                System.out.println("\n✅ Karyawan Tetap berhasil ditambahkan!");
+                break;
+            case 3:
+                System.out.print("Lembur: Rp ");
+                double lemburKon = scanner.nextDouble();
+                karyawanArray[jumlahKaryawan] = new KaryawanKontrak(nama, departemen, gajiPokok, lemburKon);
+                jumlahKaryawan++;
+                System.out.println("\n✅ Karyawan Kontrak berhasil ditambahkan!");
+                break;
+            default:
+                System.out.println("\n❌ Jenis karyawan tidak valid!");
+        }
+    }
+    
+    static void tampilkanSemuaKaryawan() {
+        if(jumlahKaryawan == 0) {
+            System.out.println("\n❌ Belum ada data karyawan!");
+            return;
+        }
+        
+        System.out.println("\n--- DAFTAR SEMUA KARYAWAN ---\n");
+        for(int i = 0; i < jumlahKaryawan; i++) {
+            karyawanArray[i].tampilkanInfo();
+        }
+    }
+    
+    static void cariKaryawan() {
+        if(jumlahKaryawan == 0) {
+            System.out.println("\n❌ Belum ada data karyawan!");
+            return;
+        }
+        
+        System.out.print("\nMasukkan nama karyawan: ");
+        String nama = scanner.nextLine();
+        
+        boolean found = false;
+        for(int i = 0; i < jumlahKaryawan; i++) {
+            if(karyawanArray[i].getNama().equalsIgnoreCase(nama)) {
+                System.out.println("\n✅ Karyawan ditemukan!");
+                karyawanArray[i].tampilkanInfo();
+                found = true;
+                break;
+            }
+        }
+        
+        if(!found) {
+            System.out.println("\n❌ Karyawan dengan nama '" + nama + "' tidak ditemukan!");
+        }
+    }
+    
+    static void hapusKaryawan() {
+        if(jumlahKaryawan == 0) {
+            System.out.println("\n❌ Belum ada data karyawan!");
+            return;
+        }
+        
+        System.out.print("\nMasukkan nama karyawan yang akan dihapus: ");
+        String nama = scanner.nextLine();
+        
+        boolean removed = false;
+        for(int i = 0; i < jumlahKaryawan; i++) {
+            if(karyawanArray[i].getNama().equalsIgnoreCase(nama)) {
+                // Shift elemen ke kiri
+                for(int j = i; j < jumlahKaryawan - 1; j++) {
+                    karyawanArray[j] = karyawanArray[j + 1];
+                }
+                karyawanArray[jumlahKaryawan - 1] = null;
+                jumlahKaryawan--;
+                System.out.println("\n✅ Karyawan '" + nama + "' berhasil dihapus!");
+                removed = true;
+                break;
+            }
+        }
+        
+        if(!removed) {
+            System.out.println("\n❌ Karyawan dengan nama '" + nama + "' tidak ditemukan!");
+        }
+    }
+    
+    static void tampilkanTotalGaji() {
+        if(jumlahKaryawan == 0) {
+            System.out.println("\n❌ Belum ada data karyawan!");
+            return;
+        }
+        
+        double totalGaji = 0;
+        for(int i = 0; i < jumlahKaryawan; i++) {
+            totalGaji += karyawanArray[i].hitungTotalPendapatan();
+        }
+        
+        System.out.println("\n╔═══════════════════════════════════════╗");
+        System.out.println("  TOTAL PENGELUARAN GAJI PERUSAHAAN");
+        System.out.println("  Jumlah Karyawan: " + jumlahKaryawan);
+        System.out.println("  Total Gaji: Rp " + String.format("%,.0f", totalGaji));
+        System.out.println("╚═══════════════════════════════════════╝");
+    }
+}
